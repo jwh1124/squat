@@ -43,7 +43,7 @@
         
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
-        window.Android.endcam();
+
         window.Android.Diff();
 
 
@@ -58,9 +58,10 @@
         const size = 500;
         const flip = true; // whether to flip the webcam
         webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
-
+       
         console.log("here~");
         await webcam.setup(); // request access to the webcam
+                window.Android.endcam();
         console.log("here~1");
         await webcam.play();
         console.log("here~2");
