@@ -126,17 +126,13 @@
         const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
         wc.innerHTML = wcprint;
 
-        if(set == maxset) {
-          const end = '종료!';
-          fin(1);
-          window.Android.endcam();
-          dn.innerHTML = end;
-          setTimeout(function(){
+  if(set == maxset) {
+            const end = '종료!';
+            fin(1);
+            window.Android.endcam();
+            dn.innerHTML = end;
             set = 0;
-          dn.innerHTML = '';
-        },3000);
-        }
-        else if (count == maxcount ){
+        } else if (count == maxcount && set != maxset) {
           set++;
           count = 0;
           fin(0);
