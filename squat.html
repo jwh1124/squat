@@ -5,27 +5,10 @@
 <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
 <title>AiHomeTraining</title>
-<style>
-    .insideWrapper{  
-    }
-    .coveredImage{
-        width:500px;
-        height:500px;
-        position:relative;
-    }
-    .coveringCanvas{ 
-        width:100%;
-        height:100%; 
-        position:absolute;
-        top:0px;
-        left:0px;
-    }
-</style>
 </head>
 <body>
 <div class="insideWrapper">
-    <img src="squat_shadow.png" class="coveredImage">
-    <canvas id="canvas" class="coveringCanvas"></canvas>
+    <canvas id="canvas"></canvas>
 </div>
 <div id="label-container"></div>
 <div id="scorecount"></div>
