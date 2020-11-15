@@ -7,9 +7,7 @@
 <title>AiHomeTraining</title>
 </head>
 <body>
-<div class="insideWrapper">
-    <canvas id="canvas"></canvas>
-</div>
+<div><canvas id="canvas"></canvas></div>
 <div id="label-container"></div>
 <div id="scorecount"></div>
 <div id="setcount"></div>
@@ -40,7 +38,9 @@
 
     async function init() {
 
-        
+      await ModelWait();
+
+
         const modelURL = URL + "model.json";
         const metadataURL = URL + "metadata.json";
 
@@ -58,7 +58,7 @@
         const size = 500;
         const flip = true; // whether to flip the webcam
         webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
-       
+
         console.log("here~");
         await webcam.setup(); // request access to the webcam
         console.log("here~1");
@@ -126,20 +126,23 @@
         const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
         wc.innerHTML = wcprint;
 
-  if(set == maxset) {
-            const end = '종료!';
-            fin(1);
-            window.Android.endcam();
-            dn.innerHTML = end;
-            set = 0;
-        } else if (count == maxcount && set != maxset) {
+        if (count == maxcount){
           set++;
           count = 0;
-          fin(0);
-          window.Android.sendset(set);
+          if(set != maxset){
+            fin(0);
+            window.Android.sendset(set);
+          } else {
+            fin(1);
+            window.Android.endcam();
+            set=0;
+          }
         }
-    ts.innerHTML = maxset;
-  }
+      ts.innerHTML = maxset;
+      }
+
+
+
 
 
 
