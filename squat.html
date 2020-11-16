@@ -108,9 +108,9 @@
           if(status == "squat"){
             count++;
             score = "excellent";
-            if (diff == 0.7)
+            if (diff == 0.7 && count < maxcount)
             window.Android.PlayEGAudio();
-            else if(diff == 0.9)
+            else if(diff == 0.9 && count < maxcount)
             window.Android.PlayHGAudio();
           }
           status = "stand";
@@ -121,9 +121,9 @@
         else if(action3 > 0.3){
           if(status == "stand" || status == "squat"){
             score = "bad";
-            if (diff == 0.7)
+            if (diff == 0.7 && count < maxcount)
             window.Android.PlayEBAudio();
-            else if(diff == 0.9)
+            else if(diff == 0.9 && count < maxcount)
             window.Android.PlayHBAudio();
           }
           status = "bent";
