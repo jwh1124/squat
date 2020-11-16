@@ -108,10 +108,10 @@
           if(status == "squat"){
             count++;
             score = "excellent";
-            // if (diff == 0.7)
-            // window.Android.PlayEGAudio();
-            // else if(diff == 0.9)
-            // window.Android.PlayHGAudio();
+            if (diff == 0.7)
+            window.Android.PlayEGAudio();
+            else if(diff == 0.9)
+            window.Android.PlayHGAudio();
           }
           status = "stand";
         }
@@ -121,10 +121,10 @@
         else if(action3 > 0.3){
           if(status == "stand" || status == "squat"){
             score = "bad";
-            // if (diff == 0.7)
-            // window.Android.PlayEBAudio();
-            // else if(diff == 0.9)
-            // window.Android.PlayHBAudio();
+            if (diff == 0.7)
+            window.Android.PlayEBAudio();
+            else if(diff == 0.9)
+            window.Android.PlayHBAudio();
           }
           status = "bent";
         }
