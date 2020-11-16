@@ -1,199 +1,276 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
-<title>AiHomeTraining</title>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@1.3.1/dist/tf.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/pose@0.8/dist/teachablemachine-pose.min.js"></script>
+  <title>AiHomeTraining</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <style>
+html, body {
+	overflow: hidden;
+	height: 100%;
+}
+
+.progress-title {
+	
+}
+
+.progress-bar {
+	width: 100%;
+	height: 50px;
+}
+
+#canvas {
+	width: 500px;
+	height: 500px;
+	/* width: 100%;
+	height: 100%; */
+	background-color: black;
+}
+
+.canvas-container {
+	margin-bottom: 20px;
+}
+
+.container {
+	background: #fafafa;
+	height: 10px;
+	width: 90%;
+	margin: 0 auto;
+	border-radius: 10px;
+}
+
+.text {
+	margin: 2em auto;
+}
+
+.bar-container {
+	background: #f0f0f0;
+	height: 10px;
+	width: 100%;
+	border-radius: 10px;
+}
+
+.bar {
+	background: #00F260; /* fallback for old browsers */
+	background: -webkit-linear-gradient(to left, #0575E6, #00F260);
+	/* Chrome 10-25, Safari 5.1-6 */
+	background: linear-gradient(to left, #0575E6, #00F260);
+	/* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	height: 10px;
+	width: 0%;
+	border-radius: 10px;
+	transition: width 400ms;
+}
+
+.state {
+	text-align: center;
+	font-size: 50px;
+	border: 3px solid #008D62;
+	color: #008D62;
+	padding: 5px;
+	border-radius: 50px;
+}
+</style>
 </head>
 <body>
-<div><canvas id="canvas"></canvas></div>
-<div id="label-container"></div>
-<div id="scorecount"></div>
-<div id="setcount"></div>
-<div id="done"></div>
-<div id="test"></div>
+  <div class='canvas-container'>
+		<canvas id='canvas'></canvas>
+	</div>
+	<div class='container'>
+		<div class='state' id='state'>adsada</div>
+		<div class="progress-title">set</div>
+		<progress class='progress-bar' id='set' value="20" max="100"></progress>
+		<div class="progress-title">count</div>
+		<progress class='progress-bar' id='count' value="10" max="100"></progress>
+	</div>
+  <div id="label-container"></div>
+  <div id="scorecount"></div>
+  <div id="setcount"></div>
+  <div id="done"></div>
+  <div id="test"></div>
 </body>
 <script type="text/javascript">
-    // More API functions here:
-    // https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
-    // the link to your model provided by Teachable Machine export panel
+// More API functions here:
+// https://github.com/googlecreativelab/teachablemachine-community/tree/master/libraries/pose
+// the link to your model provided by Teachable Machine export panel
 
 
-    let model, webcam, ctx, labelContainer, maxPredictions;
-    var maxset;
-    var maxcount;
-    var ModelFlag;
-    var diff = 0.7; //난이도 (변경 가능)
-    var URL = "https://teachablemachine.withgoogle.com/models/dlAd8wlcW/";
+let model, webcam, ctx, labelContainer, maxPredictions;
+var maxset;
+var maxcount;
+var ModelFlag;
+var diff = 0.7; //난이도 (변경 가능)
+var URL = "https://teachablemachine.withgoogle.com/models/dlAd8wlcW/";
 
-    window.onload = function(){
-    //안드로이드로부터 얼마나 많은 세트, 운동횟수를 할 것 인지 받아옴
-    window.Android.howmany();
-    window.Android.Diff();
-
-
-    init(); //초기화
-
-  };
-
-    async function init() {
+window.onload = function(){
+  //안드로이드로부터 얼마나 많은 세트, 운동횟수를 할 것 인지 받아옴
+  window.Android.howmany();
+  window.Android.Diff();
 
 
-        const modelURL = URL + "model.json";
-        const metadataURL = URL + "metadata.json";
+  init(); //초기화
+
+};
+
+async function init() {
 
 
+  const modelURL = URL + "model.json";
+  const metadataURL = URL + "metadata.json";
 
 
 
-        // load the model and metadata
-        // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
-        // Note: the pose library adds a tmPose object to your window (window.tmPose)
-        model = await tmPose.load(modelURL, metadataURL);
-        maxPredictions = model.getTotalClasses();
 
-        // Convenience function to setup a webcam
-        const size = 500;
-        const flip = true; // whether to flip the webcam
-        webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
 
-        console.log("here~");
-        await webcam.setup(); // request access to the webcam
-        console.log("here~1");
-        await webcam.play();
-        console.log("here~2");
-        window.requestAnimationFrame(loop);
+  // load the model and metadata
+  // Refer to tmImage.loadFromFiles() in the API to support files from a file picker
+  // Note: the pose library adds a tmPose object to your window (window.tmPose)
+  model = await tmPose.load(modelURL, metadataURL);
+  maxPredictions = model.getTotalClasses();
 
-        // append/get elements to the DOM
-        const canvas = document.getElementById("canvas");
-        canvas.width = size; canvas.height = size;
-        ctx = canvas.getContext("2d");
-        labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
-        wc = document.getElementById("scorecount");
-        sc = document.getElementById("setcount");
-        dn = document.getElementById("done");
-        ts = document.getElementById("test");
-        }
-    }
+  // Convenience function to setup a webcam
+  const size = 500;
+  const flip = true; // whether to flip the webcam
+  webcam = new tmPose.Webcam(size, size, flip); // width, height, flip
 
-    async function loop(timestamp) {
-        webcam.update(); // update the webcam frame
-        await countable();
-        window.requestAnimationFrame(loop);
-    }
+  console.log("here~");
+  await webcam.setup(); // request access to the webcam
+  console.log("here~1");
+  await webcam.play();
+  console.log("here~2");
+  window.requestAnimationFrame(loop);
+
+  // append/get elements to the DOM
+  const canvas = document.getElementById("canvas");
+  canvas.width = size; canvas.height = size;
+  ctx = canvas.getContext("2d");
+  labelContainer = document.getElementById("label-container");
+  for (let i = 0; i < maxPredictions; i++) { // and class labels
+    labelContainer.appendChild(document.createElement("div"));
+    wc = document.getElementById("scorecount");
+    sc = document.getElementById("setcount");
+    dn = document.getElementById("done");
+    ts = document.getElementById("test");
+  }
+}
+
+async function loop(timestamp) {
+  webcam.update(); // update the webcam frame
+  await countable();
+  window.requestAnimationFrame(loop);
+}
 
 //종료시 통신함수
-    function fin(n){
-      if (n == 1){
-                  window.Android.FinalSignal(1); //전체set 종료
-                 }
-      else{
-          window.Android.FinalSignal(0); //한세트 종료
-          }
-    }
+function fin(n){
+  if (n == 1){
+    window.Android.FinalSignal(1); //전체set 종료
+  }
+  else{
+    window.Android.FinalSignal(0); //한세트 종료
+  }
+}
 
 
 //사용자 지정 불가능 변수
 
-    var score = "";
-    var status = "";
-    var set = 0, count = 0, kcal = 0;
-    var action1 = 0.00, action2 = 0.00, action3 = 0.00, action4 = 0.00, action5 =0.00, action6 = 0.00;
+var score = "";
+var status = "";
+var set = 0, count = 0, kcal = 0;
+var action1 = 0.00, action2 = 0.00, action3 = 0.00, action4 = 0.00, action5 =0.00, action6 = 0.00;
 
-    async function countable() { //운동 동작마다 필요한 class 수가 달라서 아마 카운트, 동작제어 등 다 따로 짜야될 듯..?
-      predict();
-        if(action1 > 0.9){
-          if(status == "squat"){
-            count++;
-            score = "excellent";
-            if (diff == 0.7 && count < maxcount){
-            window.Android.PlayEGAudio();
-            console.log("0.7");
-          }
-            else if(diff == 0.9 && count < maxcount){
-            window.Android.PlayHGAudio();
-            console.log("0.9");
-          }
-          }
-          status = "stand";
-        }
-        else if(action2 > diff){
-          status = "squat";
-        }
-        else if(action3 > 0.3){
-          if(status == "stand" || status == "squat"){
-            score = "bad";
-            if (diff == 0.7 && count < maxcount){
-            window.Android.PlayEBAudio();
-            console.log("0.7");
-          }
-            else if(diff == 0.9 && count < maxcount){
-            window.Android.PlayHBAudio();
-            console.log("0.9");
-          }
-          }
-          status = "bent";
-        }
-        const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
-        wc.innerHTML = wcprint;
-
-        if (count == maxcount){
-          set++;
-          count = 0;
-          if(set != maxset){
-            fin(0);
-            window.Android.sendset(set);
-          } else {
-            fin(1);
-            window.Android.endcam();
-            set=0;
-          }
-        }
-      ts.innerHTML = maxset;
+async function countable() { //운동 동작마다 필요한 class 수가 달라서 아마 카운트, 동작제어 등 다 따로 짜야될 듯..?
+  predict();
+  if(action1 > 0.9){
+    if(status == "squat"){
+      count++;
+      score = "excellent";
+      if (diff == 0.7 && count < maxcount){
+        window.Android.PlayEGAudio();
+        console.log("0.7");
       }
-
-
-
-
-
-
-    async function predict() {
-        // Prediction #1: run input through posenet
-        // estimatePose can take in an image, video or canvas html element
-        const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
-        // Prediction 2: run input through teachable machine classification model
-        const prediction = await model.predict(posenetOutput);
-
-
-        action1 = prediction[0].probability.toFixed(2);
-        action2 = prediction[1].probability.toFixed(2);
-        action3 = prediction[2].probability.toFixed(2);
-
-
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
-        }
-
-        // finally draw the poses
-        drawPose(pose);
-
+      else if(diff == 0.9 && count < maxcount){
+        window.Android.PlayHGAudio();
+        console.log("0.9");
+      }
     }
-
-    function drawPose(pose) {
-        if (webcam.canvas) {
-            ctx.drawImage(webcam.canvas, 0, 0);
-            // draw the keypoints and skeleton
-            if (pose) {
-                const minPartConfidence = 0.5;
-                tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
-                tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
-            }
-        }
+    status = "stand";
+  }
+  else if(action2 > diff){
+    status = "squat";
+  }
+  else if(action3 > 0.3){
+    if(status == "stand" || status == "squat"){
+      score = "bad";
+      if (diff == 0.7 && count < maxcount){
+        window.Android.PlayEBAudio();
+        console.log("0.7");
+      }
+      else if(diff == 0.9 && count < maxcount){
+        window.Android.PlayHBAudio();
+        console.log("0.9");
+      }
     }
+    status = "bent";
+  }
+  const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
+  wc.innerHTML = wcprint;
+
+  if (count == maxcount){
+    set++;
+    count = 0;
+    if(set != maxset){
+      fin(0);
+      window.Android.sendset(set);
+    } else {
+      fin(1);
+      window.Android.endcam();
+      set=0;
+    }
+  }
+  ts.innerHTML = maxset;
+}
+
+
+
+
+
+
+async function predict() {
+  // Prediction #1: run input through posenet
+  // estimatePose can take in an image, video or canvas html element
+  const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
+  // Prediction 2: run input through teachable machine classification model
+  const prediction = await model.predict(posenetOutput);
+
+
+  action1 = prediction[0].probability.toFixed(2);
+  action2 = prediction[1].probability.toFixed(2);
+  action3 = prediction[2].probability.toFixed(2);
+
+
+  for (let i = 0; i < maxPredictions; i++) {
+    const classPrediction =
+    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+    labelContainer.childNodes[i].innerHTML = classPrediction;
+  }
+
+  // finally draw the poses
+  drawPose(pose);
+
+}
+
+function drawPose(pose) {
+  if (webcam.canvas) {
+    ctx.drawImage(webcam.canvas, 0, 0);
+    // draw the keypoints and skeleton
+    if (pose) {
+      const minPartConfidence = 0.5;
+      tmPose.drawKeypoints(pose.keypoints, minPartConfidence, ctx);
+      tmPose.drawSkeleton(pose.keypoints, minPartConfidence, ctx);
+    }
+  }
+}
 </script>
 </html>
