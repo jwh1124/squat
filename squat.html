@@ -149,10 +149,10 @@ async function init() {
   labelContainer = document.getElementById("label-container");
   for (let i = 0; i < maxPredictions; i++) { // and class labels
     labelContainer.appendChild(document.createElement("div"));
-    wc = document.getElementById("scorecount");
-    sc = document.getElementById("setcount");
-    dn = document.getElementById("done");
-    ts = document.getElementById("test");
+    // wc = document.getElementById("scorecount");
+    // sc = document.getElementById("setcount");
+    // dn = document.getElementById("done");
+    // ts = document.getElementById("test");
   }
 }
 
@@ -214,8 +214,15 @@ async function countable() { //운동 동작마다 필요한 class 수가 달라
     }
     status = "bent";
   }
-  const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
-  wc.innerHTML = wcprint;
+  // const wcprint = '상태' + score + '갯수 :' + count +'세트 :'+ set;
+  // wc.innerHTML = wcprint;
+  document.getElementById("state").innerHTML = status;
+  document.getElementById('set').value = set;
+  document.getElementById('set').max = maxset;
+
+  document.getElementById('count').value = count;
+  document.getElementById('count').max = maxcount;
+
 
   if (count == maxcount){
     set++;
