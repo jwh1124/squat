@@ -13,7 +13,7 @@ html, body {
 }
 
 .progress-title {
-	
+
 }
 
 .progress-bar {
@@ -236,7 +236,7 @@ async function countable() { //운동 동작마다 필요한 class 수가 달라
       set=0;
     }
   }
-  ts.innerHTML = maxset;
+  // ts.innerHTML = maxset;
 }
 
 
@@ -257,11 +257,11 @@ async function predict() {
   action3 = prediction[2].probability.toFixed(2);
 
 
-  for (let i = 0; i < maxPredictions; i++) {
-    const classPrediction =
-    prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-    labelContainer.childNodes[i].innerHTML = classPrediction;
-  }
+  // for (let i = 0; i < maxPredictions; i++) {
+  //   const classPrediction =
+  //   prediction[i].className + ": " + prediction[i].probability.toFixed(2);
+  //   labelContainer.childNodes[i].innerHTML = classPrediction;
+  // }
 
   // finally draw the poses
   drawPose(pose);
