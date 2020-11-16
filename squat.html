@@ -109,12 +109,14 @@
           if(status == "squat"){
             count++;
             score = "excellent";
-            if (diff == 0.7 && count < maxcount)
+            if (diff == 0.7 && count < maxcount){
             window.Android.PlayEGAudio();
             console.log("0.7");
-            else if(diff == 0.9 && count < maxcount)
+          }
+            else if(diff == 0.9 && count < maxcount){
             window.Android.PlayHGAudio();
             console.log("0.9");
+          }
           }
           status = "stand";
         }
@@ -124,12 +126,14 @@
         else if(action3 > 0.3){
           if(status == "stand" || status == "squat"){
             score = "bad";
-            if (diff == 0.7 && count < maxcount)
+            if (diff == 0.7 && count < maxcount){
             window.Android.PlayEBAudio();
             console.log("0.7");
-            else if(diff == 0.9 && count < maxcount)
+          }
+            else if(diff == 0.9 && count < maxcount){
             window.Android.PlayHBAudio();
             console.log("0.9");
+          }
           }
           status = "bent";
         }
