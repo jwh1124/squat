@@ -32,6 +32,7 @@
     window.Android.howmany();
     window.Android.Diff();
 
+
     init(); //초기화
 
   };
@@ -110,8 +111,10 @@
             score = "excellent";
             if (diff == 0.7 && count < maxcount)
             window.Android.PlayEGAudio();
+            console.log("0.7");
             else if(diff == 0.9 && count < maxcount)
             window.Android.PlayHGAudio();
+            console.log("0.9");
           }
           status = "stand";
         }
@@ -123,8 +126,10 @@
             score = "bad";
             if (diff == 0.7 && count < maxcount)
             window.Android.PlayEBAudio();
+            console.log("0.7");
             else if(diff == 0.9 && count < maxcount)
             window.Android.PlayHBAudio();
+            console.log("0.9");
           }
           status = "bent";
         }
