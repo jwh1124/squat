@@ -113,11 +113,7 @@ window.onload = function(){
   init(); //초기화
 
 };
-document.getElementById("state").innerHTML = status;
-document.getElementById('set').value = set;
-document.getElementById('set').max = maxset;
-document.getElementById('count').value = count;
-document.getElementById('count').max = maxcount;
+
 
 async function init() {
 
@@ -184,6 +180,12 @@ var score = "";
 var status = "";
 var set = 0, count = 0, kcal = 0;
 var action1 = 0.00, action2 = 0.00, action3 = 0.00, action4 = 0.00, action5 =0.00, action6 = 0.00;
+
+document.getElementById("state").innerHTML = status;
+document.getElementById('set').value = set;
+document.getElementById('set').max = maxset;
+document.getElementById('count').value = count;
+document.getElementById('count').max = maxcount;
 
 async function countable() { //운동 동작마다 필요한 class 수가 달라서 아마 카운트, 동작제어 등 다 따로 짜야될 듯..?
   predict();
