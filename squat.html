@@ -229,12 +229,17 @@ async function countable() { //운동 동작마다 필요한 class 수가 달라
     set++;
     count = 0;
     if(set != maxset){
-      fin(0);
-      window.Android.sendset(set);
+      setTimeout(function() {
+        fin(0);
+        window.Android.sendset(set);
+}, 100);
+
     } else {
-      fin(1);
-      window.Android.endcam();
-      set=0;
+      setTimeout(function() {
+        fin(1);
+        window.Android.endcam();
+        set=0;
+}, 100);
     }
   }
   // ts.innerHTML = maxset;
